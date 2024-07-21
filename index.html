@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 7.4.7.2 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="00:00:00"/>
+	<style type="text/css">
+		@page { size: 8.27in 11.69in; margin: 0.79in }
+		p { line-height: 115%; margin-bottom: 0.1in; background: transparent }
+		pre { font-family: "Liberation Mono", monospace; font-size: 10pt; background: transparent }
+	</style>
+</head>
+<body lang="en-US" link="#000080" vlink="#800000" dir="ltr"><pre>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;FarmPrice&lt;/title&gt;
+    &lt;style&gt;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #upload-section {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;FarmPrice&lt;/h1&gt;
+    &lt;div id=&quot;upload-section&quot;&gt;
+        &lt;input type=&quot;file&quot; id=&quot;csvFileInput&quot; accept=&quot;.csv&quot; /&gt;
+        &lt;button onclick=&quot;loadCSV()&quot;&gt;Upload CSV&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div id=&quot;table-section&quot;&gt;
+        &lt;table id=&quot;pricingTable&quot;&gt;
+            &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;Vegetable&lt;/th&gt;
+                    &lt;th&gt;Price&lt;/th&gt;
+                &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+            &lt;/tbody&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        function loadCSV() {
+            const input = document.getElementById('csvFileInput');
+            const file = input.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const text = e.target.result;
+                    displayCSV(text);
+                }
+                reader.readAsText(file);
+            }
+        }
+
+        function displayCSV(text) {
+            const rows = text.split('\n').slice(1);
+            const tableBody = document.querySelector('#pricingTable tbody');
+            tableBody.innerHTML = ''; // Clear previous content
+
+            rows.forEach(row =&gt; {
+                const cols = row.split(',');
+                const tableRow = document.createElement('tr');
+                cols.forEach(col =&gt; {
+                    const tableCell = document.createElement('td');
+                    tableCell.textContent = col;
+                    tableRow.appendChild(tableCell);
+                });
+                tableBody.appendChild(tableRow);
+            });
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</body>
+</html>
