@@ -56,11 +56,10 @@
     </div>
 
     <!-- Firebase SDKs -->
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js"></script>
 
+    <script>
         // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDBlukBFnh3B6zxhcNSfWUuPAuwOWCtXKQ",
@@ -73,8 +72,8 @@
         };
 
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
         document.addEventListener('DOMContentLoaded', (event) => {
             const heading = document.getElementById('heading');
@@ -85,41 +84,41 @@
             fetchCSVData();
         });
 
-        async function uploadCSV() {
+        function uploadCSV() {
             const input = document.getElementById('csvFileInput');
             const file = input.files[0];
 
             if (file) {
                 const reader = new FileReader();
-                reader.onload = async function(e) {
+                reader.onload = function(e) {
                     const text = e.target.result;
-                    await saveCSVToFirestore(text);
+                    saveCSVToFirestore(text);
                 };
                 reader.readAsText(file);
             }
         }
 
-        async function saveCSVToFirestore(csvText) {
-            try {
-                await setDoc(doc(db, "csvData", "latest"), {
-                    data: csvText
-                });
+        function saveCSVToFirestore(csvText) {
+            db.collection("csvData").doc("latest").set({
+                data: csvText
+            }).then(() => {
                 alert("CSV data uploaded successfully!");
                 displayCSV(csvText);
-            } catch (error) {
+            }).catch((error) => {
                 console.error("Error uploading CSV data: ", error);
-            }
+            });
         }
 
-        async function fetchCSVData() {
-            const docRef = doc(db, "csvData", "latest");
-            const docSnap = await getDoc(docRef);
-
-            if (docSnap.exists()) {
-                displayCSV(docSnap.data().data);
-            } else {
-                console.log("No such document!");
-            }
+        function fetchCSVData() {
+            db.collection("csvData").doc("latest").get().then((doc) => {
+                if (doc.exists) {
+                    displayCSV(doc.data().data);
+                } else {
+                    console.log("No such document!");
+                }
+            }).catch((error) => {
+                console.error("Error fetching CSV data: ", error);
+            });
         }
 
         function displayCSV(text) {
